@@ -1,0 +1,28 @@
+{
+  "user": [
+    {
+      "id": 1,
+      "name": "Thiều",
+      "email": "nguyenthieu11021995@gmail.com",
+      "status": true
+    },
+    {
+      "id": 2,
+      "name": "Mai",
+      "email": "mainguyen@gmail.com",
+      "status": false
+    },
+    {
+      "id": 3,
+      "name": "An",
+      "email": "anan1234@gmail.com",
+      "status": true
+    },
+    {
+      "id": 4,
+      "name": "Hùng",
+      "email": "hungtran2020@gmail.com",
+      "status": false
+    }
+  ]
+}

@@ -1,14 +1,53 @@
+"use client"
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 export default function Page() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    if (!termsAccepted) {
+      alert("You need to accept the terms and conditions");
+      return;
+    }
+
+    console.log("Form submitted", { username, email, password });
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">
           Đăng Ký
         </h2>
-        <form>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-6">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Tên Đăng Nhập:
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              placeholder="Nhập tên đăng nhập"
+            />
+          </div>
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -19,6 +58,8 @@ export default function Page() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               placeholder="Nhập email của bạn"
             />
@@ -33,6 +74,8 @@ export default function Page() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               placeholder="Nhập mật khẩu của bạn"
             />
@@ -47,6 +90,8 @@ export default function Page() {
             <input
               type="password"
               id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               placeholder="Nhập lại mật khẩu của bạn"
             />
@@ -55,6 +100,8 @@ export default function Page() {
             <input
               type="checkbox"
               id="terms"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
             />
             <label

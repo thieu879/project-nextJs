@@ -8,14 +8,16 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Navbar() {
+export default function Sidebars() {
+  const route = useRouter()
   const [check, setCheck] = useState(true);
   const handleClick = () => {
     setCheck(!check);
   };
   const logOut = () => {
-    
+    route.push("/signIn")
   }
   return (
     <div id="app" style={{ height: "100vh" }}>
@@ -35,12 +37,7 @@ export default function Navbar() {
             <h2>
               {check ? (
                 <nav className="flex items-center gap-[10px]">
-                  <img
-                    className="w-[40px] h-[40px]"
-                    src="https://firebasestorage.googleapis.com/v0/b/test-e7b59.appspot.com/o/Giao%20H%C3%A0ng%20%C6%AFu%20Ti%C3%AAn.png?alt=media&token=d49cc39d-a2f9-41d6-ac26-de5d037956a4"
-                    alt=""
-                  />
-                  <div>Ecommerce</div>
+                  <div>Trang Quản Lý</div>
                 </nav>
               ) : (
                 ""
@@ -48,18 +45,20 @@ export default function Navbar() {
             </h2>
           </MenuItem>
 
-          <MenuItem icon={<PersonOutlinedIcon />}>{check && "Users"}</MenuItem>
+          <MenuItem icon={<PersonOutlinedIcon />}>
+            {check && "Quản Lý Người Dùng"}
+          </MenuItem>
           <MenuItem icon={<AdminPanelSettingsOutlinedIcon />}>
-            {check && "Admin"}
+            {check && "Quản Lý Admin"}
           </MenuItem>
           <MenuItem icon={<Inventory2OutlinedIcon />}>
-            {check && "Product"}
+            {check && "Quản Lý Sản Phẩm"}
           </MenuItem>
           <MenuItem icon={<DashboardOutlinedIcon />}>
-            {check && "Dashboard"}
+            {check && "Trang Tổng Quan"}
           </MenuItem>
           <MenuItem icon={<LogoutOutlinedIcon />} onClick={logOut}>
-            {check && "Log Out"}
+            {check && "Đăng Xuất"}
           </MenuItem>
         </Menu>
       </Sidebar>

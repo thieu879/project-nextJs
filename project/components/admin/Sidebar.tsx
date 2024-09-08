@@ -45,10 +45,10 @@ export default function Sidebars() {
             </h2>
           </MenuItem>
 
-          <MenuItem icon={<PersonOutlinedIcon />}>
+          <MenuItem href="/admin/UserManagement" icon={<PersonOutlinedIcon />}>
             {check && "Quản Lý Người Dùng"}
           </MenuItem>
-          <MenuItem icon={<AdminPanelSettingsOutlinedIcon />}>
+          <MenuItem href="/admin/adminManagement" icon={<AdminPanelSettingsOutlinedIcon />}>
             {check && "Quản Lý Admin"}
           </MenuItem>
           <MenuItem icon={<Inventory2OutlinedIcon />}>

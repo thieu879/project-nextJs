@@ -1,10 +1,9 @@
-// redux/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import userManagement from './reducers/userManagement';
 
 export const store = configureStore({
   reducer: {
-    admin: userManagement,
+    users: userManagement,
   },
 });
 

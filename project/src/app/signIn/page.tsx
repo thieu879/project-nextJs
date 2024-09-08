@@ -1,14 +1,35 @@
+"use client";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { loginUser } from "../../../redux/service/userManagement.service";
 import Link from "next/link";
-import React from "react";
 
 export default function Page() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(loginUser({ email, password }))
+      .unwrap()
+      .then(() => {
+        router.push("/home");
+      })
+      .catch((error:any) => {
+        alert(error);
+      });
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">
           Đăng Nhập
         </h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -19,6 +40,8 @@ export default function Page() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               placeholder="Nhập email của bạn"
             />
@@ -33,22 +56,11 @@ export default function Page() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="block w-full border-gray-300 rounded-lg shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
               placeholder="Nhập mật khẩu của bạn"
             />
-          </div>
-          <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              id="terms"
-              className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-            />
-            <label
-              htmlFor="terms"
-              className="ml-2 text-sm font-medium text-gray-700"
-            >
-              Đồng ý với điều khoản
-            </label>
           </div>
           <button
             type="submit"

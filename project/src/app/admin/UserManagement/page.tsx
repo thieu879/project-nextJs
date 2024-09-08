@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSortUp,
@@ -12,7 +12,11 @@ import {
 import Swal from "sweetalert2";
 import Sidebars from "../../../../components/admin/Sidebar";
 import { AppDispatch, RootState } from "../../../../redux/stores/store";
-import { getUsers } from "../../../../redux/service/userManagement.service";
+import {
+  deleteUsers,
+  getUsers,
+  updateUserStatus,
+} from "../../../../redux/service/userManagement.service";
 
 interface User {
   id: number;
@@ -22,11 +26,10 @@ interface User {
   role: number;
 }
 
-const UserManagement: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { users, status, error } = useSelector(
-    (state: RootState) => state.admin
-  );
+export default function UserManagement() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { users } = useSelector((state: RootState) => state.users);
+  const [sortedUsers, setSortedUsers] = useState<User[]>([]);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -34,19 +37,30 @@ const UserManagement: React.FC = () => {
     dispatch(getUsers());
   }, [dispatch]);
 
+  useEffect(() => {
+    // Filter users by role 1 and sort them
+    const filteredUsers = users.filter((user) => user.role === 1);
+    setSortedUsers(filteredUsers);
+  }, [users]);
+
+  const changeStatus = (id: number, status: boolean) => {
+    dispatch(updateUserStatus({ id, status }));
+  };
+
   const handleSort = (field: keyof User) => {
-    const sortedUsers = [...users].sort((a, b) => {
+    const sorted = [...sortedUsers].sort((a, b) => {
       if (sortOrder === "asc") {
         return a[field] > b[field] ? 1 : -1;
       } else {
         return a[field] < b[field] ? 1 : -1;
       }
     });
+    setSortedUsers(sorted);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
 
-  const handleDelete = (id: number) => {
-    Swal.fire({
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
       title: "Bạn có chắc chắn không?",
       text: "Hành động này sẽ xoá người dùng này!",
       icon: "warning",
@@ -54,15 +68,20 @@ const UserManagement: React.FC = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
       confirmButtonText: "Xoá",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Perform the delete operation (e.g., dispatch delete action)
-        Swal.fire("Đã Xoá!", "Người dùng đã được xoá.", "success");
-      }
     });
+
+    if (result.isConfirmed) {
+      dispatch(deleteUsers(id))
+        .then(() => {
+          Swal.fire("Đã Xoá!", "Người dùng đã được xoá.", "success");
+        })
+        .catch(() => {
+          Swal.fire("Lỗi!", "Không thể xoá người dùng.", "error");
+        });
+    }
   };
 
-  const filteredUsers = users.filter(
+  const filteredUsers = sortedUsers.filter(
     (user) =>
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -70,8 +89,6 @@ const UserManagement: React.FC = () => {
 
   return (
     <div className="flex">
-      <title>Quản Lý Người Dùng</title>
-      <link rel="icon" href="https://logodix.com/logo/1707097.png" />
       <Sidebars />
       <div className="p-4 ml-auto mr-auto w-full max-w-6xl">
         <form className="mb-6 flex items-center space-x-4">
@@ -87,8 +104,7 @@ const UserManagement: React.FC = () => {
             placeholder="Nhập tên hoặc email..."
           />
         </form>
-        {status === "loading" && <p>Loading...</p>}
-        {status === "failed" && <p className="text-red-500">{error}</p>}
+
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse border border-gray-200">
             <thead>
@@ -97,7 +113,6 @@ const UserManagement: React.FC = () => {
                 <th
                   className="px-4 py-2 border cursor-pointer"
                   onClick={() => handleSort("name")}
-                  aria-label="Sort by Name"
                 >
                   Tên
                   <FontAwesomeIcon
@@ -121,7 +136,8 @@ const UserManagement: React.FC = () => {
                     <td className="px-4 py-2 border">{user.name}</td>
                     <td className="px-4 py-2 border">{user.email}</td>
                     <td className="px-4 py-2 border">
-                      <span
+                      <button
+                        onClick={() => changeStatus(user.id, user.status)}
                         className={`px-2 py-1 rounded-full text-sm font-semibold ${
                           user.status
                             ? "bg-green-200 text-green-600"
@@ -129,7 +145,7 @@ const UserManagement: React.FC = () => {
                         }`}
                       >
                         {user.status ? "Hoạt Động" : "Không Hoạt Động"}
-                      </span>
+                      </button>
                     </td>
                     <td className="px-4 py-2 border">
                       <FontAwesomeIcon
@@ -159,6 +175,4 @@ const UserManagement: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default UserManagement;
+}

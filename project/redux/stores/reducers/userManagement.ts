@@ -1,7 +1,6 @@
-// redux/adminSlice.ts
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { getUsers } from "../../service/userManagement.service";
+import { addAdmin, deleteAdmin, deleteUsers, getAdmins, getUsers, loginUser, updateAdmin, updateAdminStatus, updateUserStatus } from "../../service/userManagement.service";
+
 interface User {
   id: number;
   name: string;
@@ -9,34 +8,62 @@ interface User {
   status: boolean;
   role: number;
 }
-interface AdminState {
+
+interface UserState {
   users: User[];
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
 }
-const initialState: AdminState = {
+
+
+
+const initialState: UserState = {
   users: [],
-  status: 'idle',
-  error: null,
 };
 
 const userManagement = createSlice({
-  name: "admin",
+  name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUsers.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(getUsers.fulfilled, (state, action) => {
-        state.status = 'succeeded';
         state.users = action.payload;
       })
-      .addCase(getUsers.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
-      });
+    .addCase(deleteUsers.fulfilled, (state, action) => {
+  state.users = state.users.filter((users) => users.id !== action.payload);
+    })
+    .addCase(updateUserStatus.fulfilled, (state, action) => {
+        const user = state.users.find((user) => user.id === action.payload.id);
+        if (user) {
+          user.status = action.payload.status;
+        }
+    })
+    .addCase(loginUser.fulfilled, (state, action) => {
+      const userIndex = state.users.findIndex((user) => user.id === action.payload.id);
+      if (userIndex !== -1) {
+        state.users[userIndex] = action.payload;
+      }
+    })
+    .addCase(getAdmins.fulfilled, (state, action) => {
+        state.users = action.payload;
+      })
+      .addCase(updateAdminStatus.fulfilled, (state, action) => {
+        const index = state.users.findIndex(admin => admin.id === action.payload.id);
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
+      })
+      .addCase(deleteAdmin.fulfilled, (state, action) => {
+        state.users = state.users.filter(admin => admin.id !== action.payload);
+      })
+      .addCase(addAdmin.fulfilled, (state, action) => {
+        state.users.push(action.payload);
+      })
+      .addCase(updateAdmin.fulfilled, (state, action) => {
+        const index = state.users.findIndex(user => user.id === action.payload.id);
+        if (index !== -1) {
+          state.users[index] = action.payload;
+        }
+      })
   },
 });
 

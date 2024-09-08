@@ -1,6 +1,9 @@
-"use client"
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import axios from "axios";
+import CryptoJS from "crypto-js";
 
 export default function Page() {
   const [username, setUsername] = useState("");
@@ -8,8 +11,9 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -22,7 +26,26 @@ export default function Page() {
       return;
     }
 
-    console.log("Form submitted", { username, email, password });
+    // Encrypt the password before sending it
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      password,
+      "secret key 123"
+    ).toString();
+
+    try {
+      await axios.post("http://localhost:8080/account", {
+        name: username,
+        email,
+        password: encryptedPassword, // Send the encrypted password
+        status: true,
+        role: 1,
+      });
+
+      router.push("/signIn");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -48,6 +71,7 @@ export default function Page() {
               placeholder="Nhập tên đăng nhập"
             />
           </div>
+
           <div className="mb-6">
             <label
               htmlFor="email"
@@ -64,6 +88,7 @@ export default function Page() {
               placeholder="Nhập email của bạn"
             />
           </div>
+
           <div className="mb-6">
             <label
               htmlFor="password"
@@ -80,6 +105,7 @@ export default function Page() {
               placeholder="Nhập mật khẩu của bạn"
             />
           </div>
+
           <div className="mb-6">
             <label
               htmlFor="confirm-password"
@@ -96,6 +122,7 @@ export default function Page() {
               placeholder="Nhập lại mật khẩu của bạn"
             />
           </div>
+
           <div className="flex items-center mb-6">
             <input
               type="checkbox"
@@ -111,6 +138,7 @@ export default function Page() {
               Đồng ý với điều khoản
             </label>
           </div>
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -118,6 +146,7 @@ export default function Page() {
             Đăng ký
           </button>
         </form>
+
         <div className="mt-6 text-center">
           <Link legacyBehavior href="/signIn">
             <a className="text-indigo-600 hover:text-indigo-800 text-sm">

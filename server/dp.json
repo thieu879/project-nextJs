@@ -1,28 +1,68 @@
 {
-  "user": [
+  "account": [
     {
       "id": 1,
       "name": "Thiều",
       "email": "nguyenthieu11021995@gmail.com",
+      "password": "123456778",
+      "role": 1,
       "status": true
     },
     {
       "id": 2,
       "name": "Mai",
       "email": "mainguyen@gmail.com",
+      "password": "123456778",
+      "role": 1,
       "status": false
     },
     {
       "id": 3,
       "name": "An",
       "email": "anan1234@gmail.com",
+      "password": "123456778",
+      "role": 1,
       "status": true
     },
     {
       "id": 4,
       "name": "Hùng",
       "email": "hungtran2020@gmail.com",
+      "password": "123456778",
+      "role": 1,
       "status": false
+    },
+    {
+      "name": "thieunguyen",
+      "email": "fwef@gmail.com",
+      "password": "thieunguyen879",
+      "status": true,
+      "role": 1,
+      "id": 5
+    },
+    {
+      "name": "thieunguyen879",
+      "email": "nguyenthieu@gmail.com",
+      "password": "U2FsdGVkX1/BjjMQDucbKoRqDhCkHaRDma6TP9TIhtc=",
+      "status": true,
+      "role": 1,
+      "id": 6
+    },
+    {
+      "name": "thieunguyen",
+      "email": "nguyenthieu@gmail.com",
+      "password": "thieunguyen879",
+      "status": true,
+      "role": 0,
+      "id": 7
+    },
+    {
+      "name": "Nguyễn Gia Thiều",
+      "email": "nguyenthieu11021995@gmail.com",
+      "password": "thieunguyen879",
+      "status": false,
+      "role": 0,
+      "id": 8
     }
   ]
 }

@@ -1,8 +1,11 @@
-"use client";
+"use client"
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { loginUser } from "../../../redux/service/userManagement.service";
+import {
+  loginUser,
+  updateUserStatusLogIn,
+} from "../../../redux/service/userManagement.service";
 import Link from "next/link";
 
 export default function Page() {
@@ -15,10 +18,15 @@ export default function Page() {
     e.preventDefault();
     dispatch(loginUser({ email, password }))
       .unwrap()
-      .then(() => {
-        router.push("/home");
+      .then((user: any) => {
+        dispatch(
+          updateUserStatusLogIn({ id: user.id, statusLogIn: true })
+        ).then(() => {
+          localStorage.setItem("userStatus", user.statusLogIn);
+          router.push("/home");
+        });
       })
-      .catch((error:any) => {
+      .catch((error: any) => {
         alert(error);
       });
   };

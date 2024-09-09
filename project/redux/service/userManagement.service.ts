@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   status: boolean;
+  statusLogIn: boolean;
   role: number;
 }
 
@@ -120,6 +121,20 @@ export const updateAdmin = createAsyncThunk(
       return response.data;
     } catch (error:any) {
       return rejectWithValue(error.response?.data.message || "An error occurred");
+    }
+  }
+);
+
+export const updateUserStatusLogIn:any = createAsyncThunk(
+  "user/updateStatusLogIn",
+  async ({ id, statusLogIn }: { id: number; statusLogIn: boolean }, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`http://localhost:8080/account/${id}`, {
+        statusLogIn: statusLogIn,
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "An error occurred");
     }
   }
 );

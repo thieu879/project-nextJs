@@ -26,7 +26,6 @@ export default function Page() {
       return;
     }
 
-    // Encrypt the password before sending it
     const encryptedPassword = CryptoJS.AES.encrypt(
       password,
       "secret key 123"
@@ -36,7 +35,8 @@ export default function Page() {
       await axios.post("http://localhost:8080/account", {
         name: username,
         email,
-        password: encryptedPassword, // Send the encrypted password
+        password: encryptedPassword,
+        statusLogIn: false,
         status: true,
         role: 1,
       });

@@ -6,6 +6,7 @@ interface User {
   name: string;
   email: string;
   status: boolean;
+  statusLogIn: boolean;
   role: number;
 }
 

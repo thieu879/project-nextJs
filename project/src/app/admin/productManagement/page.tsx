@@ -12,7 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/stores/store";
 
 import Swal from "sweetalert2";
-import { addProduct, deleteProduct, getProduct, updateProduct } from "../../../../redux/service/productManagement.service";
+import {
+  addProduct,
+  deleteProduct,
+  getProduct,
+  updateProduct,
+} from "../../../../redux/service/productManagement.service";
 
 interface Product {
   id: number;
@@ -36,8 +41,7 @@ export default function Page() {
   useEffect(() => {
     dispatch(getProduct());
   }, [dispatch]);
-  console.log(products);
-  
+
   useEffect(() => {
     const filteredProducts = products.filter((product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -46,13 +50,14 @@ export default function Page() {
   }, [products, searchQuery]);
 
   const handleSort = (key: keyof Product) => {
-    const sorted = [...sortedProduct].sort((a, b) => {
+    const sorted = [...sortedProduct].sort((a: any, b: any) => {
       if (sortOrder === "asc") {
         return a[key] > b[key] ? 1 : -1;
       } else {
         return a[key] < b[key] ? 1 : -1;
       }
     });
+
     setSortedProducts(sorted);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
@@ -133,6 +138,10 @@ export default function Page() {
     }
   };
 
+  const filteredProducts = sortedProduct.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex">
       <Sidebars />
@@ -141,7 +150,7 @@ export default function Page() {
           onClick={() => handleOpenModal()}
           className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md"
         >
-          Thêm Admin
+          Thêm Sản Phẩm
         </button>
         <form className="mb-6 flex items-center space-x-4">
           <label htmlFor="search" className="text-lg font-medium">
@@ -173,15 +182,30 @@ export default function Page() {
                   />
                 </th>
                 <th className="px-4 py-2 border">Ảnh</th>
-                <th className="px-4 py-2 border">Số Lượng</th>
-                <th className="px-4 py-2 border">Giá</th>
-                <th className="px-4 py-2 border">Mô Tả</th>
+                <th
+                  className="px-4 py-2 border cursor-pointer"
+                  onClick={() => handleSort("stock")}
+                >
+                  Số Lượng
+                </th>
+                <th
+                  className="px-4 py-2 border cursor-pointer"
+                  onClick={() => handleSort("price")}
+                >
+                  Giá
+                </th>
+                <th
+                  className="px-4 py-2 border cursor-pointer w-[400px]"
+                  onClick={() => handleSort("description")}
+                >
+                  Mô Tả
+                </th>
                 <th className="px-4 py-2 border">Hành Động</th>
               </tr>
             </thead>
             <tbody>
-              {sortedProduct.length > 0 ? (
-                sortedProduct.map((product, index) => (
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product, index) => (
                   <tr
                     key={product.id}
                     className="text-center odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-all"
@@ -196,7 +220,15 @@ export default function Page() {
                       />
                     </td>
                     <td className="px-4 py-2 border">{product.stock}</td>
-                    <td className="px-4 py-2 border">{product.price}</td>
+                    <td className="px-4 py-2 border">
+                      {(typeof product.price === "string"
+                        ? parseFloat(product.price)
+                        : product.price
+                      ).toLocaleString("it-IT", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </td>
                     <td className="px-4 py-2 border">{product.description}</td>
                     <td className="px-4 py-2 border">
                       <FontAwesomeIcon
@@ -217,124 +249,104 @@ export default function Page() {
               ) : (
                 <tr>
                   <td colSpan={7} className="px-4 py-2 border text-center">
-                    Không tìm thấy sản phẩm
+                    Không có sản phẩm nào.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
-      {modalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
-          <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-lg">
-            <h2 className="text-xl font-bold mb-4">
-              {currentProduct ? "Cập Nhật Admin" : "Thêm Admin"}
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Tên:
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  defaultValue={currentProduct?.name || ""}
-                  required
-                  className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Ảnh:
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="file"
-                  defaultValue={currentProduct?.image || ""}
-                  required
-                  className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Số Lượng:
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder={
-                    currentProduct ? "Để trống nếu không đổi mật khẩu" : ""
-                  }
-                  className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Giá:
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder={
-                    currentProduct ? "Để trống nếu không đổi mật khẩu" : ""
-                  }
-                  className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Mô tả:
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder={
-                    currentProduct ? "Để trống nếu không đổi mật khẩu" : ""
-                  }
-                  className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
 
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="mr-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-                >
-                  Huỷ
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                  {currentProduct ? "Cập Nhật" : "Thêm"}
-                </button>
-              </div>
-            </form>
+        {modalOpen && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-4 rounded-md shadow-lg max-w-lg w-full">
+              <h2 className="text-xl font-semibold mb-4">
+                {currentProduct ? "Cập Nhật Sản Phẩm" : "Thêm Sản Phẩm"}
+              </h2>
+              <form onSubmit={handleFormSubmit}>
+                <div className="mb-4">
+                  <label htmlFor="name" className="block text-gray-700">
+                    Tên Sản Phẩm
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    defaultValue={currentProduct?.name || ""}
+                    className="border border-gray-300 p-2 rounded-md w-full"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="image" className="block text-gray-700">
+                    Ảnh Sản Phẩm
+                  </label>
+                  <input
+                    id="image"
+                    name="image"
+                    type="text"
+                    defaultValue={currentProduct?.image || ""}
+                    className="border border-gray-300 p-2 rounded-md w-full"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="stock" className="block text-gray-700">
+                    Số Lượng
+                  </label>
+                  <input
+                    id="stock"
+                    name="stock"
+                    type="number"
+                    defaultValue={currentProduct?.stock || 0}
+                    className="border border-gray-300 p-2 rounded-md w-full"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="price" className="block text-gray-700">
+                    Giá
+                  </label>
+                  <input
+                    id="price"
+                    name="price"
+                    type="text"
+                    defaultValue={currentProduct?.price || ""}
+                    className="border border-gray-300 p-2 rounded-md w-full"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="description" className="block text-gray-700">
+                    Mô Tả
+                  </label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    rows={4}
+                    defaultValue={currentProduct?.description || ""}
+                    className="border border-gray-300 p-2 rounded-md w-full resize-none"
+                  />
+                </div>
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md"
+                  >
+                    Huỷ
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  >
+                    {currentProduct ? "Cập Nhật" : "Thêm"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

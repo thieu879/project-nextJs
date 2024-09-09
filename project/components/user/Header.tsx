@@ -1,8 +1,27 @@
+"use client"
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { updateUserStatusLogIn } from "../../redux/service/userManagement.service";
+import { useDispatch } from "react-redux";
 
 export default function Header() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const handleLogout = () => {
+    const userId = Number(localStorage.getItem("userId")); 
+
+    dispatch(updateUserStatusLogIn({ id: userId, statusLogIn: false })).then(
+      () => {
+        localStorage.removeItem("userStatus");
+        router.push("/signIn");
+      }
+    );
+  };
+  const handleProduct = () => {
+    router.push("/products")
+  }
   return (
     <div className="bg-gray-800 text-white p-4">
       <div className="flex justify-between items-center">
@@ -19,11 +38,13 @@ export default function Header() {
 
         <div className="flex space-x-4">
           <button className="hover:bg-gray-700 p-2 rounded">Trang chủ</button>
-          <button className="hover:bg-gray-700 p-2 rounded">
+          <button onClick={handleProduct} className="hover:bg-gray-700 p-2 rounded">
             Trang sản phẩm
           </button>
           <button className="hover:bg-gray-700 p-2 rounded">Lịch sử mua</button>
-          <button className="hover:bg-gray-700 p-2 rounded">Sản Phẩm Yêu Thích</button>
+          <button className="hover:bg-gray-700 p-2 rounded">
+            Sản Phẩm Yêu Thích
+          </button>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -43,6 +64,12 @@ export default function Header() {
             >
               Đăng Nhập
             </Link>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+            >
+              Đăng Xuất
+            </button>
           </div>
         </div>
       </div>

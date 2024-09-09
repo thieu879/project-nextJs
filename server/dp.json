@@ -64,5 +64,15 @@
       "role": 0,
       "id": 8
     }
+  ],
+  "product": [
+    {
+      "id": 1,
+      "name": "áo",
+      "image": "https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg",
+      "stock": 2,
+      "price": "$20",
+      "description": "Em rất thích ngắm nhìn những cơn mưa mùa xuân. Mưa xuân không vội vã, ồn ào như mưa hạ. Mưa xuân dịu dàng, chầm chậm, mang đến cảm giác bình yên và thư thái trong tâm hồn. Những hạt mưa bắt đầu rơi, hạt mưa nhỏ, lất phất trong gió, vương những giọt long lanh trên cánh đào mỏng manh, trên những chồi non cây lá."
+    }
   ]
 }

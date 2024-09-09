@@ -37,26 +37,36 @@ export default function AdminManagement() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentAdmin, setCurrentAdmin] = useState<Admin | null>(null);
+  const [sortedAdmin, setSortedAdmins] = useState<Admin[]>([]);
+
 
   useEffect(() => {
     dispatch(getAdmins());
   }, [dispatch]);
 
-  const handleSort = (key: keyof Admin) => {
-    const sorted = [...admins].sort((a:any, b:any) => {
+    useEffect(() => {
+      const filteredAdmins = admins.filter((admins) => admins.role === 0);
+      setSortedAdmins(filteredAdmins);
+    }, [admins]);
+
+  const handleSort = (key: keyof Admin) => {    
+    const sorted = [...sortedAdmin].sort((a:any, b:any) => {
       if (sortOrder === "asc") {
         return a[key] > b[key] ? 1 : -1;
       } else {
         return a[key] < b[key] ? 1 : -1;
       }
     });
+    setSortedAdmins(sorted);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
-
+  
   const changeStatus = (id: number, status: boolean) => {
-    dispatch(updateAdminStatus({ id, status })).catch(() => {});
+    
+    dispatch(updateAdminStatus({ id, status }));
+    
   };
-
+  
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: "Bạn có chắc chắn không?",
@@ -79,7 +89,7 @@ export default function AdminManagement() {
     }
   };
 
-  const filteredAdmins = admins.filter(
+  const filteredAdmins = sortedAdmin.filter(
     (admin) =>
       admin.role === 0 &&
       (admin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -186,7 +196,7 @@ export default function AdminManagement() {
                     <td className="px-4 py-2 border">{admin.email}</td>
                     <td className="px-4 py-2 border">
                       <button
-                        onClick={() => changeStatus(admin.id, !admin.status)}
+                        onClick={() => changeStatus(admin.id, admin.status)}
                         className={`px-2 py-1 rounded-full text-sm font-semibold ${
                           admin.status
                             ? "bg-green-200 text-green-600"

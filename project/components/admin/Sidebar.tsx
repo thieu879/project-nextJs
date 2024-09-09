@@ -51,7 +51,7 @@ export default function Sidebars() {
           <MenuItem href="/admin/adminManagement" icon={<AdminPanelSettingsOutlinedIcon />}>
             {check && "Quản Lý Admin"}
           </MenuItem>
-          <MenuItem icon={<Inventory2OutlinedIcon />}>
+          <MenuItem href="/admin/productManagement" icon={<Inventory2OutlinedIcon />}>
             {check && "Quản Lý Sản Phẩm"}
           </MenuItem>
           <MenuItem icon={<DashboardOutlinedIcon />}>

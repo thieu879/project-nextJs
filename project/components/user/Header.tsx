@@ -23,6 +23,7 @@ export default function Header() {
             Trang sản phẩm
           </button>
           <button className="hover:bg-gray-700 p-2 rounded">Lịch sử mua</button>
+          <button className="hover:bg-gray-700 p-2 rounded">Sản Phẩm Yêu Thích</button>
         </div>
 
         <div className="flex items-center space-x-4">

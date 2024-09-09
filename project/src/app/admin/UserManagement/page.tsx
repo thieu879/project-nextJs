@@ -36,9 +36,9 @@ export default function UserManagement() {
   useEffect(() => {
     dispatch(getUsers());
   }, [dispatch]);
-
+  console.log(users);
+  
   useEffect(() => {
-    // Filter users by role 1 and sort them
     const filteredUsers = users.filter((user) => user.role === 1);
     setSortedUsers(filteredUsers);
   }, [users]);
@@ -47,7 +47,7 @@ export default function UserManagement() {
     dispatch(updateUserStatus({ id, status }));
   };
 
-  const handleSort = (field: keyof User) => {
+  const handleSort = (field: keyof User) => {    
     const sorted = [...sortedUsers].sort((a, b) => {
       if (sortOrder === "asc") {
         return a[field] > b[field] ? 1 : -1;

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -22,12 +22,13 @@ export default function Page() {
         dispatch(
           updateUserStatusLogIn({ id: user.id, statusLogIn: true })
         ).then(() => {
-          localStorage.setItem("userStatus", user.statusLogIn);
+          localStorage.setItem("userId", user.id.toString());
+          localStorage.setItem("userStatus", "true");
           router.push("/home");
         });
       })
       .catch((error: any) => {
-        alert(error);
+        alert(error.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
       });
   };
 
@@ -72,16 +73,17 @@ export default function Page() {
           </div>
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-lg"
           >
             Đăng Nhập
           </button>
         </form>
         <div className="mt-6 text-center">
-          <Link legacyBehavior href="/signUp">
-            <a className="text-indigo-600 hover:text-indigo-800 text-sm">
-              Chưa có tài khoản? Đăng ký
-            </a>
+          <Link
+            href="/signUp"
+            className="text-indigo-600 hover:text-indigo-500"
+          >
+            Chưa có tài khoản? Đăng ký ngay
           </Link>
         </div>
       </div>

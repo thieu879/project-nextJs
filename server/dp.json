@@ -24,265 +24,266 @@
       "status": true,
       "role": 1,
       "id": 9
+    },
+    {
+      "name": "thieunguyen",
+      "email": "nguyenthieu@gmail.com",
+      "password": "U2FsdGVkX18Bd5CVgpjacXACTehpYGsM8ygjk3IrW2w=",
+      "statusLogIn": true,
+      "status": true,
+      "role": 1,
+      "id": 10
     }
   ],
+  "cart": [],
   "product": [
     {
-        "id": 1,
-        "name": "áo",
-        "image": "https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg",
-        "stock": 2,
-        "price": "20",
-        "description": "Chiếc áo em mặc đến lớp hôm nay là một chiếc áo sơ mi trắng, chất liệu cotton mềm mại. Áo có cổ viền tròn và một bông hoa hồng nhỏ thêu ở ngực trái. Khi mặc vào, em cảm thấy thoải mái và tự tin. Áo rất hợp với làn da trắng và nụ cười rạng rỡ của em."
+      "id": 1,
+      "name": "áo",
+      "image": "https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg",
+      "stock": 1,
+      "price": "20",
+      "description": "Chiếc áo em mặc đến lớp hôm nay là một chiếc áo sơ mi trắng, chất liệu cotton mềm mại. Áo có cổ viền tròn và một bông hoa hồng nhỏ thêu ở ngực trái. Khi mặc vào, em cảm thấy thoải mái và tự tin. Áo rất hợp với làn da trắng và nụ cười rạng rỡ của em."
     },
     {
-        "id": 2,
-        "name": "quần",
-        "image": "https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-cute-2.jpg",
-        "stock": 4,
-        "price": "123",
-        "description": "đẹp"
+      "id": 2,
+      "name": "quần",
+      "image": "https://khoinguonsangtao.vn/wp-content/uploads/2022/07/avatar-cute-2.jpg",
+      "stock": 4,
+      "price": "123",
+      "description": "đẹp"
     },
     {
-        "id": 3,
-        "name": "áo",
-        "image": "https://example.com/ao1.jpg",
-        "stock": 5,
-        "price": "25",
-        "description": "Áo thun màu xanh, thoáng mát và dễ chịu."
+      "id": 3,
+      "name": "áo",
+      "image": "https://example.com/ao1.jpg",
+      "stock": 5,
+      "price": "25",
+      "description": "Áo thun màu xanh, thoáng mát và dễ chịu."
     },
     {
-        "id": 4,
-        "name": "áo",
-        "image": "https://example.com/ao2.jpg",
-        "stock": 3,
-        "price": "30",
-        "description": "Áo hoodie nỉ, ấm áp cho mùa đông."
+      "id": 4,
+      "name": "áo",
+      "image": "https://example.com/ao2.jpg",
+      "stock": 3,
+      "price": "30",
+      "description": "Áo hoodie nỉ, ấm áp cho mùa đông."
     },
     {
-        "id": 5,
-        "name": "áo",
-        "image": "https://example.com/ao3.jpg",
-        "stock": 8,
-        "price": "15",
-        "description": "Áo ba lỗ thể thao, phù hợp cho tập luyện."
+      "id": 6,
+      "name": "áo",
+      "image": "https://example.com/ao4.jpg",
+      "stock": 6,
+      "price": "28",
+      "description": "Áo sơ mi caro, phong cách năng động."
     },
     {
-        "id": 6,
-        "name": "áo",
-        "image": "https://example.com/ao4.jpg",
-        "stock": 6,
-        "price": "28",
-        "description": "Áo sơ mi caro, phong cách năng động."
+      "id": 7,
+      "name": "áo",
+      "image": "https://example.com/ao5.jpg",
+      "stock": 10,
+      "price": "35",
+      "description": "Áo khoác gió, chống thấm nước."
     },
     {
-        "id": 7,
-        "name": "áo",
-        "image": "https://example.com/ao5.jpg",
-        "stock": 10,
-        "price": "35",
-        "description": "Áo khoác gió, chống thấm nước."
+      "id": 8,
+      "name": "áo",
+      "image": "https://example.com/ao6.jpg",
+      "stock": 7,
+      "price": "22",
+      "description": "Áo polo cổ trụ, thanh lịch và sang trọng."
     },
     {
-        "id": 8,
-        "name": "áo",
-        "image": "https://example.com/ao6.jpg",
-        "stock": 7,
-        "price": "22",
-        "description": "Áo polo cổ trụ, thanh lịch và sang trọng."
+      "id": 9,
+      "name": "áo",
+      "image": "https://example.com/ao7.jpg",
+      "stock": 9,
+      "price": "40",
+      "description": "Áo len, ấm áp cho những ngày se lạnh."
     },
     {
-        "id": 9,
-        "name": "áo",
-        "image": "https://example.com/ao7.jpg",
-        "stock": 9,
-        "price": "40",
-        "description": "Áo len, ấm áp cho những ngày se lạnh."
+      "id": 10,
+      "name": "áo",
+      "image": "https://example.com/ao8.jpg",
+      "stock": 12,
+      "price": "18",
+      "description": "Áo phông đơn giản, dễ phối đồ."
     },
     {
-        "id": 10,
-        "name": "áo",
-        "image": "https://example.com/ao8.jpg",
-        "stock": 12,
-        "price": "18",
-        "description": "Áo phông đơn giản, dễ phối đồ."
+      "id": 11,
+      "name": "áo",
+      "image": "https://example.com/ao9.jpg",
+      "stock": 11,
+      "price": "26",
+      "description": "Áo khoác denim, phong cách cổ điển."
     },
     {
-        "id": 11,
-        "name": "áo",
-        "image": "https://example.com/ao9.jpg",
-        "stock": 11,
-        "price": "26",
-        "description": "Áo khoác denim, phong cách cổ điển."
+      "id": 12,
+      "name": "áo",
+      "image": "https://example.com/ao10.jpg",
+      "stock": 4,
+      "price": "29",
+      "description": "Áo vest lịch lãm, phù hợp cho sự kiện trang trọng."
     },
     {
-        "id": 12,
-        "name": "áo",
-        "image": "https://example.com/ao10.jpg",
-        "stock": 4,
-        "price": "29",
-        "description": "Áo vest lịch lãm, phù hợp cho sự kiện trang trọng."
+      "id": 13,
+      "name": "quần",
+      "image": "https://example.com/quan1.jpg",
+      "stock": 5,
+      "price": "50",
+      "description": "Quần jean xanh, phong cách cá tính."
     },
     {
-        "id": 13,
-        "name": "quần",
-        "image": "https://example.com/quan1.jpg",
-        "stock": 5,
-        "price": "50",
-        "description": "Quần jean xanh, phong cách cá tính."
+      "id": 14,
+      "name": "quần",
+      "image": "https://example.com/quan2.jpg",
+      "stock": 6,
+      "price": "45",
+      "description": "Quần kaki đen, phù hợp cho mọi hoàn cảnh."
     },
     {
-        "id": 14,
-        "name": "quần",
-        "image": "https://example.com/quan2.jpg",
-        "stock": 6,
-        "price": "45",
-        "description": "Quần kaki đen, phù hợp cho mọi hoàn cảnh."
+      "id": 15,
+      "name": "quần",
+      "image": "https://example.com/quan3.jpg",
+      "stock": 7,
+      "price": "40",
+      "description": "Quần short thoải mái, thích hợp cho ngày hè."
     },
     {
-        "id": 15,
-        "name": "quần",
-        "image": "https://example.com/quan3.jpg",
-        "stock": 7,
-        "price": "40",
-        "description": "Quần short thoải mái, thích hợp cho ngày hè."
+      "id": 16,
+      "name": "quần",
+      "image": "https://example.com/quan4.jpg",
+      "stock": 9,
+      "price": "60",
+      "description": "Quần âu lịch lãm, mặc đi làm hay dự tiệc."
     },
     {
-        "id": 16,
-        "name": "quần",
-        "image": "https://example.com/quan4.jpg",
-        "stock": 9,
-        "price": "60",
-        "description": "Quần âu lịch lãm, mặc đi làm hay dự tiệc."
+      "id": 17,
+      "name": "quần",
+      "image": "https://example.com/quan5.jpg",
+      "stock": 8,
+      "price": "35",
+      "description": "Quần jogger thể thao, năng động."
     },
     {
-        "id": 17,
-        "name": "quần",
-        "image": "https://example.com/quan5.jpg",
-        "stock": 8,
-        "price": "35",
-        "description": "Quần jogger thể thao, năng động."
+      "id": 18,
+      "name": "quần",
+      "image": "https://example.com/quan6.jpg",
+      "stock": 10,
+      "price": "55",
+      "description": "Quần jean đen, thời trang và cá tính."
     },
     {
-        "id": 18,
-        "name": "quần",
-        "image": "https://example.com/quan6.jpg",
-        "stock": 10,
-        "price": "55",
-        "description": "Quần jean đen, thời trang và cá tính."
+      "id": 19,
+      "name": "quần",
+      "image": "https://example.com/quan7.jpg",
+      "stock": 6,
+      "price": "52",
+      "description": "Quần kaki màu be, lịch lãm."
     },
     {
-        "id": 19,
-        "name": "quần",
-        "image": "https://example.com/quan7.jpg",
-        "stock": 6,
-        "price": "52",
-        "description": "Quần kaki màu be, lịch lãm."
+      "id": 20,
+      "name": "quần",
+      "image": "https://example.com/quan8.jpg",
+      "stock": 7,
+      "price": "38",
+      "description": "Quần lửng denim, phong cách trẻ trung."
     },
     {
-        "id": 20,
-        "name": "quần",
-        "image": "https://example.com/quan8.jpg",
-        "stock": 7,
-        "price": "38",
-        "description": "Quần lửng denim, phong cách trẻ trung."
+      "id": 21,
+      "name": "quần",
+      "image": "https://example.com/quan9.jpg",
+      "stock": 5,
+      "price": "48",
+      "description": "Quần thể thao, chất liệu co giãn thoải mái."
     },
     {
-        "id": 21,
-        "name": "quần",
-        "image": "https://example.com/quan9.jpg",
-        "stock": 5,
-        "price": "48",
-        "description": "Quần thể thao, chất liệu co giãn thoải mái."
+      "id": 22,
+      "name": "quần",
+      "image": "https://example.com/quan10.jpg",
+      "stock": 11,
+      "price": "42",
+      "description": "Quần kaki xám, thanh lịch."
     },
     {
-        "id": 22,
-        "name": "quần",
-        "image": "https://example.com/quan10.jpg",
-        "stock": 11,
-        "price": "42",
-        "description": "Quần kaki xám, thanh lịch."
+      "id": 23,
+      "name": "giày",
+      "image": "https://example.com/giay1.jpg",
+      "stock": 10,
+      "price": "70",
+      "description": "Giày thể thao, phù hợp cho vận động viên."
     },
     {
-        "id": 23,
-        "name": "giày",
-        "image": "https://example.com/giay1.jpg",
-        "stock": 10,
-        "price": "70",
-        "description": "Giày thể thao, phù hợp cho vận động viên."
+      "id": 24,
+      "name": "giày",
+      "image": "https://example.com/giay2.jpg",
+      "stock": 7,
+      "price": "90",
+      "description": "Giày da, phù hợp cho sự kiện trang trọng."
     },
     {
-        "id": 24,
-        "name": "giày",
-        "image": "https://example.com/giay2.jpg",
-        "stock": 7,
-        "price": "90",
-        "description": "Giày da, phù hợp cho sự kiện trang trọng."
+      "id": 25,
+      "name": "giày",
+      "image": "https://example.com/giay3.jpg",
+      "stock": 6,
+      "price": "75",
+      "description": "Giày boot da, phong cách mạnh mẽ."
     },
     {
-        "id": 25,
-        "name": "giày",
-        "image": "https://example.com/giay3.jpg",
-        "stock": 6,
-        "price": "75",
-        "description": "Giày boot da, phong cách mạnh mẽ."
+      "id": 26,
+      "name": "giày",
+      "image": "https://example.com/giay4.jpg",
+      "stock": 8,
+      "price": "65",
+      "description": "Giày lười, tiện lợi và thoải mái."
     },
     {
-        "id": 26,
-        "name": "giày",
-        "image": "https://example.com/giay4.jpg",
-        "stock": 8,
-        "price": "65",
-        "description": "Giày lười, tiện lợi và thoải mái."
+      "id": 27,
+      "name": "giày",
+      "image": "https://example.com/giay5.jpg",
+      "stock": 9,
+      "price": "85",
+      "description": "Giày cao gót, tôn lên vẻ đẹp sang trọng."
     },
     {
-        "id": 27,
-        "name": "giày",
-        "image": "https://example.com/giay5.jpg",
-        "stock": 9,
-        "price": "85",
-        "description": "Giày cao gót, tôn lên vẻ đẹp sang trọng."
+      "id": 28,
+      "name": "giày",
+      "image": "https://example.com/giay6.jpg",
+      "stock": 5,
+      "price": "80",
+      "description": "Giày thể thao màu trắng, thời trang."
     },
     {
-        "id": 28,
-        "name": "giày",
-        "image": "https://example.com/giay6.jpg",
-        "stock": 5,
-        "price": "80",
-        "description": "Giày thể thao màu trắng, thời trang."
+      "id": 29,
+      "name": "giày",
+      "image": "https://example.com/giay7.jpg",
+      "stock": 4,
+      "price": "95",
+      "description": "Giày da lộn, phong cách cổ điển."
     },
     {
-        "id": 29,
-        "name": "giày",
-        "image": "https://example.com/giay7.jpg",
-        "stock": 4,
-        "price": "95",
-        "description": "Giày da lộn, phong cách cổ điển."
+      "id": 30,
+      "name": "giày",
+      "image": "https://example.com/giay8.jpg",
+      "stock": 6,
+      "price": "100",
+      "description": "Giày thể thao chạy bộ, độ bền cao."
     },
     {
-        "id": 30,
-        "name": "giày",
-        "image": "https://example.com/giay8.jpg",
-        "stock": 6,
-        "price": "100",
-        "description": "Giày thể thao chạy bộ, độ bền cao."
+      "id": 31,
+      "name": "giày",
+      "image": "https://example.com/giay9.jpg",
+      "stock": 7,
+      "price": "88",
+      "description": "Giày sneakers, phù hợp cho mọi hoàn cảnh."
     },
     {
-        "id": 31,
-        "name": "giày",
-        "image": "https://example.com/giay9.jpg",
-        "stock": 7,
-        "price": "88",
-        "description": "Giày sneakers, phù hợp cho mọi hoàn cảnh."
-    },
-    {
-        "id": 32,
-        "name": "giày",
-        "image": "https://example.com/giay10.jpg",
-        "stock": 8,
-        "price": "110",
-        "description": "Giày oxford, thanh lịch và sang trọng."
+      "id": 32,
+      "name": "giày",
+      "image": "https://example.com/giay10.jpg",
+      "stock": 8,
+      "price": "110",
+      "description": "Giày oxford, thanh lịch và sang trọng."
     }
-
   ]
 }

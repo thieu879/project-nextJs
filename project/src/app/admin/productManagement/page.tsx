@@ -7,10 +7,11 @@ import {
   faWrench,
   faSortUp,
   faSortDown,
+  faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/stores/store";
-
 import Swal from "sweetalert2";
 import {
   addProduct,
@@ -37,6 +38,10 @@ export default function Page() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [sortedProduct, setSortedProducts] = useState<Product[]>([]);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     dispatch(getProduct());
@@ -138,8 +143,25 @@ export default function Page() {
     }
   };
 
-  const filteredProducts = sortedProduct.filter((product) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Pagination logic
+  const totalPages = Math.ceil(sortedProduct.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const startIdx = (currentPage - 1) * itemsPerPage;
+  const paginatedProducts = sortedProduct.slice(
+    startIdx,
+    startIdx + itemsPerPage
   );
 
   return (
@@ -204,13 +226,13 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product, index) => (
+              {paginatedProducts.length > 0 ? (
+                paginatedProducts.map((product, index) => (
                   <tr
                     key={product.id}
                     className="text-center odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-all"
                   >
-                    <td className="px-4 py-2 border">{index + 1}</td>
+                    <td className="px-4 py-2 border">{startIdx + index + 1}</td>
                     <td className="px-4 py-2 border">{product.name}</td>
                     <td className="px-4 py-2 border">
                       <img
@@ -248,8 +270,8 @@ export default function Page() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="px-4 py-2 border text-center">
-                    Không có sản phẩm nào.
+                  <td colSpan={7} className="text-center py-4">
+                    Không tìm thấy sản phẩm nào.
                   </td>
                 </tr>
               )}
@@ -257,96 +279,98 @@ export default function Page() {
           </table>
         </div>
 
-        {modalOpen && (
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-4 rounded-md shadow-lg max-w-lg w-full">
-              <h2 className="text-xl font-semibold mb-4">
-                {currentProduct ? "Cập Nhật Sản Phẩm" : "Thêm Sản Phẩm"}
-              </h2>
-              <form onSubmit={handleFormSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="name" className="block text-gray-700">
-                    Tên Sản Phẩm
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    defaultValue={currentProduct?.name || ""}
-                    className="border border-gray-300 p-2 rounded-md w-full"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="image" className="block text-gray-700">
-                    Ảnh Sản Phẩm
-                  </label>
-                  <input
-                    id="image"
-                    name="image"
-                    type="text"
-                    defaultValue={currentProduct?.image || ""}
-                    className="border border-gray-300 p-2 rounded-md w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="stock" className="block text-gray-700">
-                    Số Lượng
-                  </label>
-                  <input
-                    id="stock"
-                    name="stock"
-                    type="number"
-                    defaultValue={currentProduct?.stock || 0}
-                    className="border border-gray-300 p-2 rounded-md w-full"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="price" className="block text-gray-700">
-                    Giá
-                  </label>
-                  <input
-                    id="price"
-                    name="price"
-                    type="text"
-                    defaultValue={currentProduct?.price || ""}
-                    className="border border-gray-300 p-2 rounded-md w-full"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="description" className="block text-gray-700">
-                    Mô Tả
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    rows={4}
-                    defaultValue={currentProduct?.description || ""}
-                    className="border border-gray-300 p-2 rounded-md w-full resize-none"
-                  />
-                </div>
-                <div className="flex justify-end space-x-4">
-                  <button
-                    type="button"
-                    onClick={handleCloseModal}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md"
-                  >
-                    Huỷ
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                  >
-                    {currentProduct ? "Cập Nhật" : "Thêm"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center space-x-4 mt-4">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-300 rounded-md disabled:bg-gray-200"
+          >
+            <FontAwesomeIcon icon={faArrowLeft} /> Trước
+          </button>
+          <span>
+            Trang {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-300 rounded-md disabled:bg-gray-200"
+          >
+            Sau <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
       </div>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">
+              {currentProduct ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
+            </h2>
+            <form onSubmit={handleFormSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">
+                  Tên Sản Phẩm
+                </label>
+                <input
+                  name="name"
+                  defaultValue={currentProduct?.name || ""}
+                  className="border border-gray-300 p-2 rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Ảnh</label>
+                <input
+                  name="image"
+                  defaultValue={currentProduct?.image || ""}
+                  className="border border-gray-300 p-2 rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Số Lượng</label>
+                <input
+                  name="stock"
+                  type="number"
+                  defaultValue={currentProduct?.stock || 0}
+                  className="border border-gray-300 p-2 rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Giá</label>
+                <input
+                  name="price"
+                  defaultValue={currentProduct?.price || ""}
+                  className="border border-gray-300 p-2 rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Mô Tả</label>
+                <textarea
+                  name="description"
+                  defaultValue={currentProduct?.description || ""}
+                  className="border border-gray-300 p-2 rounded-md w-full"
+                />
+              </div>
+              <div className="flex justify-end space-x-4">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-4 py-2 bg-gray-300 rounded-md"
+                >
+                  Huỷ
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                >
+                  {currentProduct ? "Cập Nhật" : "Thêm"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

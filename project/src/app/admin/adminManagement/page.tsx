@@ -37,20 +37,21 @@ export default function AdminManagement() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentAdmin, setCurrentAdmin] = useState<Admin | null>(null);
-  const [sortedAdmin, setSortedAdmins] = useState<Admin[]>([]);
-
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [adminsPerPage] = useState<number>(2);
+  const [sortedAdmins, setSortedAdmins] = useState<Admin[]>([]);
 
   useEffect(() => {
     dispatch(getAdmins());
   }, [dispatch]);
 
-    useEffect(() => {
-      const filteredAdmins = admins.filter((admins) => admins.role === 0);
-      setSortedAdmins(filteredAdmins);
-    }, [admins]);
+  useEffect(() => {
+    const filteredAdmins = admins.filter((admin) => admin.role === 0);
+    setSortedAdmins(filteredAdmins);
+  }, [admins]);
 
-  const handleSort = (key: keyof Admin) => {    
-    const sorted = [...sortedAdmin].sort((a:any, b:any) => {
+  const handleSort = (key: keyof Admin) => {
+    const sorted = [...sortedAdmins].sort((a:any, b:any) => {
       if (sortOrder === "asc") {
         return a[key] > b[key] ? 1 : -1;
       } else {
@@ -60,13 +61,11 @@ export default function AdminManagement() {
     setSortedAdmins(sorted);
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
-  
+
   const changeStatus = (id: number, status: boolean) => {
-    
     dispatch(updateAdminStatus({ id, status }));
-    
   };
-  
+
   const handleDelete = async (id: number) => {
     const result = await Swal.fire({
       title: "Bạn có chắc chắn không?",
@@ -89,12 +88,23 @@ export default function AdminManagement() {
     }
   };
 
-  const filteredAdmins = sortedAdmin.filter(
+  const filteredAdmins = sortedAdmins.filter(
     (admin) =>
       admin.role === 0 &&
       (admin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         admin.email.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const indexOfLastAdmin = currentPage * adminsPerPage;
+  const indexOfFirstAdmin = indexOfLastAdmin - adminsPerPage;
+  const currentAdmins = filteredAdmins.slice(
+    indexOfFirstAdmin,
+    indexOfLastAdmin
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleOpenModal = (admin: Admin | null = null) => {
     setCurrentAdmin(admin);
@@ -139,6 +149,8 @@ export default function AdminManagement() {
         });
     }
   };
+
+  const totalPages = Math.ceil(filteredAdmins.length / adminsPerPage);
 
   return (
     <div className="flex">
@@ -185,13 +197,15 @@ export default function AdminManagement() {
               </tr>
             </thead>
             <tbody>
-              {filteredAdmins.length > 0 ? (
-                filteredAdmins.map((admin, index) => (
+              {currentAdmins.length > 0 ? (
+                currentAdmins.map((admin, index) => (
                   <tr
                     key={admin.id}
                     className="text-center odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-all"
                   >
-                    <td className="px-4 py-2 border">{index + 1}</td>
+                    <td className="px-4 py-2 border">
+                      {indexOfFirstAdmin + index + 1}
+                    </td>
                     <td className="px-4 py-2 border">{admin.name}</td>
                     <td className="px-4 py-2 border">{admin.email}</td>
                     <td className="px-4 py-2 border">
@@ -233,12 +247,33 @@ export default function AdminManagement() {
           </table>
         </div>
 
-        {/* Modal */}
+        {/* Pagination Controls */}
+        <div className="flex justify-center items-center space-x-4 mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 text-gray-600 rounded-md"
+          >
+            &laquo; Trước
+          </button>
+          <span>
+            Trang {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 text-gray-600 rounded-md"
+          >
+            Tiếp &raquo;
+          </button>
+        </div>
+
+        {/* Admin Form Modal */}
         {modalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
-            <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-lg">
-              <h2 className="text-xl font-bold mb-4">
-                {currentAdmin ? "Cập Nhật Admin" : "Thêm Admin"}
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+              <h2 className="text-lg font-bold mb-4">
+                {currentAdmin ? "Sửa Admin" : "Thêm Admin"}
               </h2>
               <form onSubmit={handleFormSubmit}>
                 <div className="mb-4">
@@ -246,7 +281,7 @@ export default function AdminManagement() {
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Tên:
+                    Tên
                   </label>
                   <input
                     id="name"
@@ -254,7 +289,7 @@ export default function AdminManagement() {
                     type="text"
                     defaultValue={currentAdmin?.name || ""}
                     required
-                    className="border border-gray-300 p-2 rounded-md w-full"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
                 <div className="mb-4">
@@ -262,7 +297,7 @@ export default function AdminManagement() {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Email:
+                    Email
                   </label>
                   <input
                     id="email"
@@ -270,50 +305,50 @@ export default function AdminManagement() {
                     type="email"
                     defaultValue={currentAdmin?.email || ""}
                     required
-                    className="border border-gray-300 p-2 rounded-md w-full"
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                   />
                 </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Mật Khẩu:
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    placeholder={
-                      currentAdmin ? "Để trống nếu không đổi mật khẩu" : ""
-                    }
-                    className="border border-gray-300 p-2 rounded-md w-full"
-                  />
-                </div>
+                {!currentAdmin && (
+                  <div className="mb-4">
+                    <label
+                      htmlFor="password"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Mật Khẩu
+                    </label>
+                    <input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                    />
+                  </div>
+                )}
                 <div className="mb-4">
                   <label
                     htmlFor="status"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Trạng Thái:
+                    Trạng Thái
                   </label>
                   <select
                     id="status"
                     name="status"
-                    defaultValue={currentAdmin?.status.toString() || "false"}
-                    className="border border-gray-300 p-2 rounded-md w-full"
+                    defaultValue={currentAdmin?.status.toString() || "true"}
+                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                   >
                     <option value="true">Hoạt Động</option>
                     <option value="false">Không Hoạt Động</option>
                   </select>
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end space-x-4">
                   <button
                     type="button"
                     onClick={handleCloseModal}
-                    className="mr-4 px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
                   >
-                    Huỷ
+                    Hủy
                   </button>
                   <button
                     type="submit"

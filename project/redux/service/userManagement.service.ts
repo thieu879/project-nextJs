@@ -16,7 +16,7 @@ enum RoleType {
   Admin = 0,
 }
 
-export const getUsers = createAsyncThunk(
+export const getUsers:any = createAsyncThunk(
   "user/getUsers",
   async () => {
     const response = await axios.get("http://localhost:8080/account");

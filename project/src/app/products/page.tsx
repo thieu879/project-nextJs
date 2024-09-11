@@ -50,7 +50,7 @@ export default function Page() {
                 {item.name}
               </h3>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 mb-2">
                 <span className="text-xl font-bold text-orange-500">
                   ₫{item.price}
                 </span>
@@ -58,6 +58,10 @@ export default function Page() {
                   ₫{(parseFloat(item.price) * 1.42).toFixed(2)}
                 </span>
                 <span className="text-sm text-gray-500">-42%</span>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                <span>Số lượng còn lại: {item.stock}</span>
               </div>
             </div>
           </button>

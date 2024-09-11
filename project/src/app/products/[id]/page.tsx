@@ -1,10 +1,11 @@
 "use client";
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/stores/store";
+import { useEffect } from "react";
 import { getProduct } from "../../../../redux/service/productManagement.service";
 import Header from "../../../../components/user/Header";
 import Footer from "../../../../components/user/Footer";
+import { addItem } from "../../../../redux/stores/reducers/cartReducer";
 
 interface Props {
   params: {
@@ -14,7 +15,7 @@ interface Props {
 
 export default function ProductDetailPage({ params }: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const { product } = useSelector((state: RootState) => state.products);
+  const product = useSelector((state: RootState) => state.products.product);
 
   useEffect(() => {
     if (params.id) {
@@ -25,6 +26,20 @@ export default function ProductDetailPage({ params }: Props) {
   const selectedProduct = product.find(
     (item) => item.id === parseInt(params.id)
   );
+
+  const handleAddToCart = () => {
+    if (selectedProduct) {
+      dispatch(
+        addItem({
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          image: selectedProduct.image,
+          price: parseFloat(selectedProduct.price),
+          quantity: 1,
+        })
+      );
+    }
+  };
 
   if (!selectedProduct) {
     return <div>Product not found</div>;
@@ -63,9 +78,21 @@ export default function ProductDetailPage({ params }: Props) {
               <div className="text-red-500">-42% Off</div>
             </div>
 
+            <div className="mb-4">
+              <span className="text-lg font-semibold">Số lượng còn lại:</span>
+              <span className="text-lg ml-2">
+                {selectedProduct.stock > 0
+                  ? `${selectedProduct.stock}`
+                  : "Out of stock"}
+              </span>
+            </div>
+
             <p className="mb-6">{selectedProduct.description}</p>
 
-            <button className="bg-orange-600 text-white px-6 py-3 rounded-lg">
+            <button
+              onClick={handleAddToCart}
+              className="bg-orange-600 text-white px-6 py-3 rounded-lg"
+            >
               Thêm Vào Giỏ Hàng
             </button>
           </div>

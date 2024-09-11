@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-interface CartItem {
+export interface CartItem {
   id: number;
   name: string;
   image: string;

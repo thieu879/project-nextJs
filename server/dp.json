@@ -20,7 +20,7 @@
       "name": "thieunguyen879",
       "email": "nguyenthieu11021995@gmail.com",
       "password": "U2FsdGVkX18UkUMfv3S0pZhm7UfFv9HLaT9mLEd+aKQ=",
-      "statusLogIn": false,
+      "statusLogIn": true,
       "status": true,
       "role": 1,
       "id": 9
@@ -29,13 +29,15 @@
       "name": "thieunguyen",
       "email": "nguyenthieu@gmail.com",
       "password": "U2FsdGVkX18Bd5CVgpjacXACTehpYGsM8ygjk3IrW2w=",
-      "statusLogIn": true,
+      "statusLogIn": false,
       "status": true,
       "role": 1,
       "id": 10
     }
   ],
-  "cart": [],
+  "cart": [
+    {}
+  ],
   "product": [
     {
       "id": 1,
@@ -276,14 +278,6 @@
       "stock": 7,
       "price": "88",
       "description": "Giày sneakers, phù hợp cho mọi hoàn cảnh."
-    },
-    {
-      "id": 32,
-      "name": "giày",
-      "image": "https://example.com/giay10.jpg",
-      "stock": 8,
-      "price": "110",
-      "description": "Giày oxford, thanh lịch và sang trọng."
     }
   ]
 }

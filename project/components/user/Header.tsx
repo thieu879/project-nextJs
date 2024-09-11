@@ -48,74 +48,92 @@ export default function Header() {
   };
 
   return (
-    <div className="bg-gray-800 text-white p-4">
-      <div className="flex justify-between items-center">
-        <div>
+    <div className="bg-gray-900 text-white">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-4">
           <button
             onClick={() => router.push("/home")}
-            className="flex items-center gap-[10px]"
+            className="flex items-center gap-2"
           >
             <img
-              className="w-24 h-24"
+              className="w-16 h-16"
               src="https://firebasestorage.googleapis.com/v0/b/test-e7b59.appspot.com/o/Giao%20H%C3%A0ng%20%C6%AFu%20Ti%C3%AAn.png?alt=media&token=d49cc39d-a2f9-41d6-ac26-de5d037956a4"
               alt="Logo"
             />
-            <div>Bán Hàng Online</div>
+            <span className="text-xl font-bold">Bán Hàng Online</span>
           </button>
         </div>
 
-        <div className="flex space-x-4">
-          <button className="hover:bg-gray-700 p-2 rounded">Trang chủ</button>
+        <nav className="flex space-x-6">
+          <button
+            onClick={() => router.push("/home")}
+            className="hover:bg-gray-800 px-4 py-2 rounded-md transition-colors"
+          >
+            Trang chủ
+          </button>
           <button
             onClick={handleProduct}
-            className="hover:bg-gray-700 p-2 rounded"
+            className="hover:bg-gray-800 px-4 py-2 rounded-md transition-colors"
           >
             Trang sản phẩm
           </button>
-          <button className="hover:bg-gray-700 p-2 rounded">Lịch sử mua</button>
-          <button className="hover:bg-gray-700 p-2 rounded">
+          <button className="hover:bg-gray-800 px-4 py-2 rounded-md transition-colors">
+            Lịch sử mua
+          </button>
+          <button
+            onClick={() => router.push("/favoriteProducts")}
+            className="hover:bg-gray-800 px-4 py-2 rounded-md transition-colors"
+          >
             Sản Phẩm Yêu Thích
           </button>
-        </div>
+        </nav>
 
-        <div className="flex items-center space-x-4">
+        {/* User and Cart Section */}
+        <div className="flex items-center space-x-6">
           <button
             onClick={handleCart}
-            className="p-2 rounded hover:bg-gray-700"
+            className="p-2 rounded-full hover:bg-gray-800 transition-colors"
           >
-            <ShoppingCartOutlined />
+            <ShoppingCartOutlined className="text-white" />
           </button>
 
-          <div>
+           <div className="relative">
             {isLoggedIn ? (
-              <div>
-                <div>
-                  <img
-                    className="w-[70px] h-[70px] rounded-[50%]"
-                    src="https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg"
-                    alt="User Avatar"
-                  />
+              <div className="flex items-center space-x-4">
+                <img
+                  className="w-10 h-10 rounded-full object-cover"
+                  src="https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg"
+                  alt="User Avatar"
+                />
+                <div className="relative">
+                  <ul className="absolute bg-white text-gray-800 right-0 mt-2 w-40 shadow-lg rounded-lg overflow-hidden">
+                    <li>
+                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                        Thông tin cá nhân
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      >
+                        Đăng Xuất
+                      </button>
+                    </li>
+                  </ul>
                 </div>
-                <ul>
-                  <li>
-                    <button>Thông tin cá nhân</button>
-                  </li>
-                  <li>
-                    <button onClick={handleLogout}>Đăng Xuất</button>
-                  </li>
-                </ul>
               </div>
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
                   href="/signUp"
-                  className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
                 >
                   Đăng ký
                 </Link>
                 <Link
                   href="/signIn"
-                  className="bg-green-500 hover:bg-green-600 text-white p-2 rounded"
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors"
                 >
                   Đăng Nhập
                 </Link>

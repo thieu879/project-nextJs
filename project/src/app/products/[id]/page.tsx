@@ -6,6 +6,7 @@ import { getProduct } from "../../../../redux/service/productManagement.service"
 import Header from "../../../../components/user/Header";
 import Footer from "../../../../components/user/Footer";
 import { addItem } from "../../../../redux/stores/reducers/cartReducer";
+import { updateProductStock } from "../../../../redux/service/productManagement.service"; // Import the thunk for updating stock
 
 interface Props {
   params: {
@@ -29,15 +30,26 @@ export default function ProductDetailPage({ params }: Props) {
 
   const handleAddToCart = () => {
     if (selectedProduct) {
-      dispatch(
-        addItem({
-          id: selectedProduct.id,
-          name: selectedProduct.name,
-          image: selectedProduct.image,
-          price: parseFloat(selectedProduct.price),
-          quantity: 1,
-        })
-      );
+      if (selectedProduct.stock > 0) {
+        // Add the item to the cart
+        dispatch(
+          addItem({
+            id: selectedProduct.id,
+            name: selectedProduct.name,
+            image: selectedProduct.image,
+            price: parseFloat(selectedProduct.price),
+            quantity: 1,
+          })
+        );
+
+        // Reduce the stock by 1 and call API to update stock
+        const updatedStock = selectedProduct.stock - 1;
+        dispatch(
+          updateProductStock({ id: selectedProduct.id, stock: updatedStock })
+        );
+      } else {
+        alert("Product is out of stock");
+      }
     }
   };
 
@@ -94,6 +106,9 @@ export default function ProductDetailPage({ params }: Props) {
               className="bg-orange-600 text-white px-6 py-3 rounded-lg"
             >
               Thêm Vào Giỏ Hàng
+            </button>
+            <button>
+              <i className="fa-regular fa-heart"></i>
             </button>
           </div>
         </div>

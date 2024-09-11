@@ -43,3 +43,15 @@ export const updateProduct = createAsyncThunk(
     }
   }
 );
+
+export const updateProductStock = createAsyncThunk(
+  'products/updateStock',
+  async ({ id, stock }: { id: number; stock: number }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`http://localhost:8080/product/${id}`, { stock });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data.message || 'An error occurred');
+    }
+  }
+);

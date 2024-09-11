@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../../../components/user/Header";
 import Footer from "../../../components/user/Footer";
@@ -21,6 +21,10 @@ export default function Page() {
   const { product } = useSelector((state: RootState) => state.products);
   const router = useRouter();
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("name-asc");
+  const [priceFilter, setPriceFilter] = useState({ min: "", max: "" });
+
   useEffect(() => {
     dispatch(getProduct());
   }, [dispatch]);
@@ -29,15 +33,115 @@ export default function Page() {
     router.push(`/products/${id}`);
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
+  };
+
+  const handlePriceFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: "min" | "max"
+  ) => {
+    setPriceFilter({ ...priceFilter, [type]: e.target.value });
+  };
+
+  const filterAndSortProducts = () => {
+    // Create a shallow copy of the products array to avoid mutating the original array
+    let filteredProducts = [...product];
+
+    // Filter by search query
+    if (searchQuery) {
+      filteredProducts = filteredProducts.filter((item: Product) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by price range
+    if (priceFilter.min || priceFilter.max) {
+      const minPrice = priceFilter.min ? parseFloat(priceFilter.min) : 0;
+      const maxPrice = priceFilter.max ? parseFloat(priceFilter.max) : Infinity;
+
+      filteredProducts = filteredProducts.filter(
+        (item: Product) =>
+          parseFloat(item.price) >= minPrice &&
+          parseFloat(item.price) <= maxPrice
+      );
+    }
+
+    // Sort products
+    if (sortBy === "name-asc") {
+      filteredProducts.sort((a: Product, b: Product) =>
+        a.name.localeCompare(b.name)
+      );
+    } else if (sortBy === "name-desc") {
+      filteredProducts.sort((a: Product, b: Product) =>
+        b.name.localeCompare(a.name)
+      );
+    } else if (sortBy === "price-asc") {
+      filteredProducts.sort(
+        (a: Product, b: Product) => parseFloat(a.price) - parseFloat(b.price)
+      );
+    } else if (sortBy === "price-desc") {
+      filteredProducts.sort(
+        (a: Product, b: Product) => parseFloat(b.price) - parseFloat(a.price)
+      );
+    }
+
+    return filteredProducts;
+  };
+
+  const displayedProducts = filterAndSortProducts();
+
   return (
     <div>
       <Header />
+      <div>
+        <div>
+          <label htmlFor="search">Tìm Kiếm: </label>
+          <input
+            type="text"
+            id="search"
+            value={searchQuery}
+            onChange={handleSearch}
+            className="border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div className="mt-4">
+          <select value={sortBy} onChange={handleSortChange}>
+            <option value="name-asc">Sắp Xếp Theo Tên (A-Z)</option>
+            <option value="name-desc">Sắp Xếp Theo Tên (Z-A)</option>
+            <option value="price-asc">Sắp Xếp Theo Giá Tăng Dần</option>
+            <option value="price-desc">Sắp Xếp Theo Giá Giảm Dần</option>
+          </select>
+        </div>
+        <div className="mt-4">
+          <label htmlFor="price-range">Lọc Sản Phẩm Theo Giá Tiền</label>
+          <input
+            type="text"
+            placeholder="Từ"
+            value={priceFilter.min}
+            onChange={(e) => handlePriceFilterChange(e, "min")}
+            className="border border-gray-300 p-2 rounded mx-2"
+          />
+          đến
+          <input
+            type="text"
+            placeholder="Đến"
+            value={priceFilter.max}
+            onChange={(e) => handlePriceFilterChange(e, "max")}
+            className="border border-gray-300 p-2 rounded mx-2"
+          />
+        </div>
+      </div>
       <div className="flex flex-wrap justify-center items-center py-8 gap-4">
-        {product?.map((item: Product) => (
+        {displayedProducts?.map((item: Product) => (
           <button
             key={item.id}
             className="max-w-xs bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden"
-            onClick={() => navigateToDetail(item.id)} // Navigate to detail page
+            onClick={() => navigateToDetail(item.id)}
           >
             <img
               className="w-full h-48 object-cover"

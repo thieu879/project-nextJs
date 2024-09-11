@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { addProduct, deleteProduct, getProduct, updateProduct } from "../../service/productManagement.service";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addProduct, deleteProduct, getProduct, updateProduct, updateProductStock } from "../../service/productManagement.service";
+import { CartItem } from "./cartReducer";
 interface Product {
   id: number;
   name: string;
@@ -40,6 +41,13 @@ const productManagement = createSlice({
           state.product[index] = action.payload;
         }
       })
+      .addCase(updateProductStock.fulfilled, (state, action: PayloadAction<CartItem>) => {
+        const updatedProduct = action.payload;
+        const productIndex = state.product.findIndex((p) => p.id === updatedProduct.id);
+        if (productIndex !== -1) {
+          state.product[productIndex] = updatedProduct;
+        }
+      });
   },
 });
 

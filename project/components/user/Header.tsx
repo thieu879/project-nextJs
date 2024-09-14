@@ -15,6 +15,7 @@ export default function Header() {
   const router = useRouter();
   const statusLogIn = useSelector((state: RootState) => state.users.users);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getUsers());
@@ -88,7 +89,6 @@ export default function Header() {
           </button>
         </nav>
 
-        {/* User and Cart Section */}
         <div className="flex items-center space-x-6">
           <button
             onClick={handleCart}
@@ -97,7 +97,11 @@ export default function Header() {
             <ShoppingCartOutlined className="text-white" />
           </button>
 
-           <div className="relative">
+          <div
+            className="relative"
+            onMouseEnter={() => setIsDropdownOpen(true)}
+            onMouseLeave={() => setIsDropdownOpen(false)}
+          >
             {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <img
@@ -105,8 +109,12 @@ export default function Header() {
                   src="https://i.pinimg.com/236x/ef/f2/5a/eff25a312c33e599eb01d7031caf135d.jpg"
                   alt="User Avatar"
                 />
-                <div className="relative">
-                  <ul className="absolute bg-white text-gray-800 right-0 mt-2 w-40 shadow-lg rounded-lg overflow-hidden">
+                <div className="relative mt-[25px]">
+                  <ul
+                    className={`absolute bg-white text-gray-800 right-0 mt-2 w-40 shadow-lg rounded-lg overflow-hidden transition-opacity duration-200 ${
+                      isDropdownOpen ? "block" : "hidden"
+                    }`}
+                  >
                     <li>
                       <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
                         Thông tin cá nhân

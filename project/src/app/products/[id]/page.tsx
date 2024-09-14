@@ -5,8 +5,12 @@ import { useEffect } from "react";
 import { getProduct } from "../../../../redux/service/productManagement.service";
 import Header from "../../../../components/user/Header";
 import Footer from "../../../../components/user/Footer";
-import { addItem } from "../../../../redux/stores/reducers/cartReducer";
-import { updateProductStock } from "../../../../redux/service/productManagement.service"; // Import the thunk for updating stock
+import { updateProductStock } from "../../../../redux/service/productManagement.service";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { addItemToCart } from "../../../../redux/stores/reducers/cartReducer";
+
+const MySwal = withReactContent(Swal);
 
 interface Props {
   params: {
@@ -31,9 +35,8 @@ export default function ProductDetailPage({ params }: Props) {
   const handleAddToCart = () => {
     if (selectedProduct) {
       if (selectedProduct.stock > 0) {
-        // Add the item to the cart
         dispatch(
-          addItem({
+          addItemToCart({
             id: selectedProduct.id,
             name: selectedProduct.name,
             image: selectedProduct.image,
@@ -42,19 +45,30 @@ export default function ProductDetailPage({ params }: Props) {
           })
         );
 
-        // Reduce the stock by 1 and call API to update stock
         const updatedStock = selectedProduct.stock - 1;
         dispatch(
           updateProductStock({ id: selectedProduct.id, stock: updatedStock })
         );
+
+        MySwal.fire({
+          icon: "success",
+          title: "Đã Thêm Vào Giỏ",
+          text: `${selectedProduct.name} đã được thêm vào giỏ hàng của bạn.`,
+          confirmButtonText: "OK",
+        });
       } else {
-        alert("Product is out of stock");
+        MySwal.fire({
+          icon: "error",
+          title: "Hết Hàng",
+          text: "Sản phẩm này hiện tại không còn hàng.",
+          confirmButtonText: "OK",
+        });
       }
     }
   };
 
   if (!selectedProduct) {
-    return <div>Product not found</div>;
+    return <div>Không tìm thấy sản phẩm</div>;
   }
 
   return (
@@ -77,7 +91,7 @@ export default function ProductDetailPage({ params }: Props) {
 
             <div className="flex items-center mb-4">
               <span className="text-yellow-500">★★★★☆</span>
-              <span className="ml-2 text-gray-600">4.7 (9,200 reviews)</span>
+              <span className="ml-2 text-gray-600">4.7 (9.200 đánh giá)</span>
             </div>
 
             <div className="mb-4">
@@ -87,7 +101,7 @@ export default function ProductDetailPage({ params }: Props) {
               <div className="text-gray-500 line-through">
                 ₫{(parseFloat(selectedProduct.price) * 1.42).toFixed(2)}
               </div>
-              <div className="text-red-500">-42% Off</div>
+              <div className="text-red-500">-42% Giảm Giá</div>
             </div>
 
             <div className="mb-4">
@@ -95,21 +109,23 @@ export default function ProductDetailPage({ params }: Props) {
               <span className="text-lg ml-2">
                 {selectedProduct.stock > 0
                   ? `${selectedProduct.stock}`
-                  : "Out of stock"}
+                  : "Hết hàng"}
               </span>
             </div>
 
             <p className="mb-6">{selectedProduct.description}</p>
 
-            <button
-              onClick={handleAddToCart}
-              className="bg-orange-600 text-white px-6 py-3 rounded-lg"
-            >
-              Thêm Vào Giỏ Hàng
-            </button>
-            <button>
-              <i className="fa-regular fa-heart"></i>
-            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={handleAddToCart}
+                className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-500 transition-colors duration-200"
+              >
+                Thêm Vào Giỏ Hàng
+              </button>
+              <button className="text-gray-500 hover:text-red-500 transition-colors duration-200">
+                <i className="fa-regular fa-heart"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

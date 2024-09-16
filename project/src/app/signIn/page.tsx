@@ -7,6 +7,7 @@ import {
   updateUserStatusLogIn,
 } from "../../../redux/service/userManagement.service";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,11 @@ export default function Page() {
         });
       })
       .catch((error: any) => {
-        alert(error.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
+        Swal.fire({
+          icon: "error",
+          title: "Đã xảy ra lỗi",
+          text: error.message || "Vui lòng thử lại.",
+        });
       });
   };
 

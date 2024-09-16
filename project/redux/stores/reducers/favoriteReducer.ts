@@ -16,16 +16,14 @@ interface FavoriteState {
 const initialState: FavoriteState = {
   items: [],
 };
-
-export const getFavoriteItems = createAsyncThunk(
-  "favorite/getFavoriteItems",
+export const getFavoritesItem:any = createAsyncThunk(
+  "favorites/getFavoritesItem",
   async () => {
     const response = await axios.get("http://localhost:8080/favorites");
-    return response.data;
+    return response.data
   }
-);
-
-export const fetchFavoriteItems = createAsyncThunk(
+)
+export const fetchFavoriteItems:any = createAsyncThunk(
   'favorite/fetchFavoriteItems',
   async (userId: number, { rejectWithValue }) => {
     try {
@@ -37,7 +35,7 @@ export const fetchFavoriteItems = createAsyncThunk(
   }
 );
 
-export const updateFavoriteItem = createAsyncThunk(
+export const updateFavoriteItem:any = createAsyncThunk(
   'favorite/updateFavoriteItem',
   async (updatedItem: FavoriteItem, { rejectWithValue }) => {
     try {
@@ -49,7 +47,7 @@ export const updateFavoriteItem = createAsyncThunk(
   }
 );
 
-export const addItemToFavorites = createAsyncThunk(
+export const addItemToFavorites:any = createAsyncThunk(
   'favorite/addItemToFavorites',
   async (item: FavoriteItem, { rejectWithValue }) => {
     try {
@@ -61,7 +59,7 @@ export const addItemToFavorites = createAsyncThunk(
   }
 );
 
-export const removeItemFromFavorites = createAsyncThunk(
+export const removeItemFromFavorites:any = createAsyncThunk(
   'favorite/removeItemFromFavorites',
   async (itemId: number, { rejectWithValue }) => {
     try {
@@ -91,17 +89,16 @@ const favoriteSlice = createSlice({
       .addCase(addItemToFavorites.fulfilled, (state, action: PayloadAction<FavoriteItem>) => {
         const item = action.payload;
         const existingItem = state.items.find((i) => i.id === item.id);
-        if (existingItem) {
-        } else {
+        if (!existingItem) {
           state.items.push(item);
         }
       })
       .addCase(removeItemFromFavorites.fulfilled, (state, action: PayloadAction<number>) => {
         state.items = state.items.filter((item) => item.id !== action.payload);
       })
-      .addCase(getFavoriteItems.fulfilled, (state, action) => {
+      .addCase(getFavoritesItem.fulfilled, (state, action) => {
         state.items = action.payload;
-      });
+      })
   },
 });
 

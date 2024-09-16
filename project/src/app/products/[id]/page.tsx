@@ -2,13 +2,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../redux/stores/store";
 import { useEffect } from "react";
-import { getProduct } from "../../../../redux/service/productManagement.service";
-import Header from "../../../../components/user/Header";
-import Footer from "../../../../components/user/Footer";
-import { updateProductStock } from "../../../../redux/service/productManagement.service";
+import {
+  getProduct,
+  updateProductStock,
+} from "../../../../redux/service/productManagement.service";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { addItemToCart } from "../../../../redux/stores/reducers/cartReducer";
+import { addItemToFavorites, FavoriteItem } from "../../../../redux/stores/reducers/favoriteReducer"; // Import the addItemToFavorites thunk
+import Header from "../../../../components/user/Header";
+import Footer from "../../../../components/user/Footer";
+
+interface Product {
+  id: number;
+  name: string;
+  image: string;
+  price: string;
+  stock: number;
+  description: string;
+}
 
 const MySwal = withReactContent(Swal);
 
@@ -67,6 +79,39 @@ export default function ProductDetailPage({ params }: Props) {
     }
   };
 
+  const handleAddToFavorites = () => {
+    if (selectedProduct) {
+      const favoriteItem: FavoriteItem = {
+        id: selectedProduct.id,
+        name: selectedProduct.name,
+        image: selectedProduct.image,
+        price: selectedProduct.price,
+        stock: +selectedProduct.stock,
+        description: selectedProduct.description,
+      };
+
+      dispatch(addItemToFavorites(favoriteItem))
+        .unwrap()
+        .then(() => {
+          MySwal.fire({
+            icon: "success",
+            title: "Đã Thêm Vào Danh Sách Yêu Thích",
+            text: `${selectedProduct.name} đã được thêm vào danh sách yêu thích của bạn.`,
+            confirmButtonText: "OK",
+          });
+        })
+        .catch(() => {
+          MySwal.fire({
+            icon: "error",
+            title: "Lỗi",
+            text: "Đã xảy ra lỗi khi thêm vào danh sách yêu thích.",
+            confirmButtonText: "OK",
+          });
+        });
+    }
+  };
+
+
   if (!selectedProduct) {
     return <div>Không tìm thấy sản phẩm</div>;
   }
@@ -122,7 +167,10 @@ export default function ProductDetailPage({ params }: Props) {
               >
                 Thêm Vào Giỏ Hàng
               </button>
-              <button className="text-gray-500 hover:text-red-500 transition-colors duration-200">
+              <button
+                onClick={handleAddToFavorites}
+                className="text-gray-500 hover:text-red-500 transition-colors duration-200"
+              >
                 <i className="fa-regular fa-heart"></i>
               </button>
             </div>

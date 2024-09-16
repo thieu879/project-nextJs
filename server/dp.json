@@ -19,7 +19,7 @@
     {
       "name": "thieunguyen879",
       "email": "nguyenthieu11021995@gmail.com",
-      "password": "U2FsdGVkX18UkUMfv3S0pZhm7UfFv9HLaT9mLEd+aKQ=",
+      "password": "U2FsdGVkX19S8fL+ElwDquJ079SnJwDBrxRusFKHj7M=",
       "statusLogIn": true,
       "status": true,
       "role": 1,
@@ -35,8 +35,15 @@
       "id": 10
     }
   ],
-  "favorites":[
-    
+  "favorites": [
+    {
+      "id": 3,
+      "name": "áo",
+      "image": "https://thuthuatnhanh.com/wp-content/uploads/2022/08/ao-thun-in-hinh-theo-yeu-cau.jpg",
+      "stock": 5,
+      "price": "25",
+      "description": "Áo thun màu xanh, thoáng mát và dễ chịu."
+    }
   ],
   "cart": [],
   "product": [
@@ -67,7 +74,7 @@
     {
       "id": 4,
       "name": "áo",
-      "image": "https://example.com/ao2.jpg",
+      "image": "https://firebasestorage.googleapis.com/v0/b/nextjs-88ab1.appspot.com/o/images%2F439557114_427673816652908_3102380687171857690_n.jpg?alt=media&token=b040da5e-5fd8-4018-b693-7ef0b5856740",
       "stock": 3,
       "price": "30",
       "description": "Áo hoodie nỉ, ấm áp cho mùa đông."

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import Swal from "sweetalert2";
 
 export default function Page() {
   const [username, setUsername] = useState("");
@@ -17,12 +18,20 @@ export default function Page() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      Swal.fire({
+        icon: "error",
+        title: "Mật khẩu không khớp",
+        text: "Vui lòng kiểm tra lại mật khẩu của bạn.",
+      });
       return;
     }
 
     if (!termsAccepted) {
-      alert("You need to accept the terms and conditions");
+      Swal.fire({
+        icon: "warning",
+        title: "Chấp nhận điều khoản",
+        text: "Bạn cần đồng ý với các điều khoản và điều kiện.",
+      });
       return;
     }
 
@@ -41,10 +50,20 @@ export default function Page() {
         role: 1,
       });
 
-      router.push("/signIn");
+      Swal.fire({
+        icon: "success",
+        title: "Đăng ký thành công",
+        text: "Bạn đã đăng ký thành công. Bạn có thể đăng nhập ngay.",
+      }).then(() => {
+        router.push("/signIn");
+      });
     } catch (error) {
       console.error("Registration failed:", error);
-      alert("Registration failed. Please try again.");
+      Swal.fire({
+        icon: "error",
+        title: "Đăng ký không thành công",
+        text: "Đã xảy ra lỗi khi đăng ký. Vui lòng thử lại.",
+      });
     }
   };
 

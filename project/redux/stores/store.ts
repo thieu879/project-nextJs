@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import userManagement from './reducers/userManagement';
 import productManagement from './reducers/productManagement';
 import cartReducer from './reducers/cartReducer';
+import favoriteReducer from './reducers/favoriteReducer';
 
 export const store = configureStore({
   reducer: {
     users: userManagement,
     products: productManagement,
-    cart: cartReducer
+    cart: cartReducer,
+    favorite: favoriteReducer,
   },
 });
 

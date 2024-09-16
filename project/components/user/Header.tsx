@@ -3,6 +3,7 @@ import { ShoppingCartOutlined } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import {
   getUsers,
   updateUserStatusLogIn,
@@ -20,10 +21,22 @@ export default function Header() {
   useEffect(() => {
     dispatch(getUsers());
     const storedStatus = localStorage.getItem("userStatus");
-    if (storedStatus) {
-      setIsLoggedIn(storedStatus === "true");
+    if (storedStatus === "true") {
+      setIsLoggedIn(true);
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập để truy cập vào trang này!",
+        confirmButtonText: "Đăng Nhập",
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push("/signIn");
+        }
+      });
     }
-  }, [dispatch]);
+  }, [dispatch, router]);
 
   const handleLogout = async () => {
     const userId = Number(localStorage.getItem("userId"));
@@ -46,6 +59,9 @@ export default function Header() {
 
   const handleCart = () => {
     router.push("/cart");
+  };
+  const handleInfor = () => {
+    router.push("/infor");
   };
 
   return (
@@ -116,7 +132,10 @@ export default function Header() {
                     }`}
                   >
                     <li>
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                      <button
+                        onClick={handleInfor}
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                      >
                         Thông tin cá nhân
                       </button>
                     </li>

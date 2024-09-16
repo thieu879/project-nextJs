@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useEffect, useState } from "react";
 import Sidebars from "../../../../components/admin/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,6 +19,8 @@ import {
   getProduct,
   updateProduct,
 } from "../../../../redux/service/productManagement.service";
+import { storage } from "../../../../config/config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface Product {
   id: number;
@@ -38,10 +40,9 @@ export default function Page() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [sortedProduct, setSortedProducts] = useState<Product[]>([]);
-
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     dispatch(getProduct());
@@ -55,7 +56,7 @@ export default function Page() {
   }, [products, searchQuery]);
 
   const handleSort = (key: keyof Product) => {
-    const sorted = [...sortedProduct].sort((a: any, b: any) => {
+    const sorted = [...sortedProduct].sort((a, b) => {
       if (sortOrder === "asc") {
         return a[key] > b[key] ? 1 : -1;
       } else {
@@ -97,53 +98,100 @@ export default function Page() {
   const handleCloseModal = () => {
     setModalOpen(false);
     setCurrentProduct(null);
+    setImageFile(null);
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name")?.toString() || "";
-    const image = formData.get("image")?.toString() || "";
+    const image = currentProduct ? currentProduct.image : "";
     const stock = Number(formData.get("stock")) || 0;
     const price = formData.get("price")?.toString() || "";
     const description = formData.get("description")?.toString() || "";
 
-    if (currentProduct) {
-      dispatch(
-        updateProduct({
-          ...currentProduct,
-          name,
-          image,
-          stock,
-          price,
-          description,
-        })
-      )
-        .then(() => {
-          Swal.fire(
-            "Cập Nhật Thành Công!",
-            "Sản phẩm đã được cập nhật.",
-            "success"
-          );
-          handleCloseModal();
-        })
-        .catch(() => {
-          Swal.fire("Lỗi!", "Không thể cập nhật sản phẩm.", "error");
-        });
+    if (imageFile) {
+      const imageRef = ref(storage, `images/${imageFile.name}`);
+      await uploadBytes(imageRef, imageFile);
+      const imageUrl = await getDownloadURL(imageRef);
+
+      if (currentProduct) {
+        dispatch(
+          updateProduct({
+            ...currentProduct,
+            name,
+            image: imageUrl,
+            stock,
+            price,
+            description,
+          })
+        )
+          .then(() => {
+            Swal.fire(
+              "Cập Nhật Thành Công!",
+              "Sản phẩm đã được cập nhật.",
+              "success"
+            );
+            handleCloseModal();
+          })
+          .catch(() => {
+            Swal.fire("Lỗi!", "Không thể cập nhật sản phẩm.", "error");
+          });
+      } else {
+        dispatch(
+          addProduct({ name, image: imageUrl, stock, price, description })
+        )
+          .then(() => {
+            Swal.fire("Thêm Thành Công!", "Sản phẩm đã được thêm.", "success");
+            handleCloseModal();
+          })
+          .catch(() => {
+            Swal.fire("Lỗi!", "Không thể thêm sản phẩm.", "error");
+          });
+      }
     } else {
-      dispatch(addProduct({ name, image, stock, price, description }))
-        .then(() => {
-          Swal.fire("Thêm Thành Công!", "Sản phẩm đã được thêm.", "success");
-          handleCloseModal();
-        })
-        .catch(() => {
-          Swal.fire("Lỗi!", "Không thể thêm sản phẩm.", "error");
-        });
+      if (currentProduct) {
+        dispatch(
+          updateProduct({
+            ...currentProduct,
+            name,
+            stock,
+            price,
+            description,
+          })
+        )
+          .then(() => {
+            Swal.fire(
+              "Cập Nhật Thành Công!",
+              "Sản phẩm đã được cập nhật.",
+              "success"
+            );
+            handleCloseModal();
+          })
+          .catch(() => {
+            Swal.fire("Lỗi!", "Không thể cập nhật sản phẩm.", "error");
+          });
+      } else {
+        dispatch(addProduct({ name, image, stock, price, description }))
+          .then(() => {
+            Swal.fire("Thêm Thành Công!", "Sản phẩm đã được thêm.", "success");
+            handleCloseModal();
+          })
+          .catch(() => {
+            Swal.fire("Lỗi!", "Không thể thêm sản phẩm.", "error");
+          });
+      }
     }
   };
 
-  // Pagination logic
+
   const totalPages = Math.ceil(sortedProduct.length / itemsPerPage);
 
   const handleNextPage = () => {
@@ -197,180 +245,144 @@ export default function Page() {
                   className="px-4 py-2 border cursor-pointer"
                   onClick={() => handleSort("name")}
                 >
-                  Tên
-                  <FontAwesomeIcon
-                    icon={sortOrder === "asc" ? faSortUp : faSortDown}
-                    className="ml-2"
-                  />
+                  Tên Sản Phẩm{" "}
+                  {sortOrder === "asc" ? (
+                    <FontAwesomeIcon icon={faSortUp} />
+                  ) : (
+                    <FontAwesomeIcon icon={faSortDown} />
+                  )}
                 </th>
                 <th className="px-4 py-2 border">Ảnh</th>
-                <th
-                  className="px-4 py-2 border cursor-pointer"
-                  onClick={() => handleSort("stock")}
-                >
-                  Số Lượng
-                </th>
-                <th
-                  className="px-4 py-2 border cursor-pointer"
-                  onClick={() => handleSort("price")}
-                >
-                  Giá
-                </th>
-                <th
-                  className="px-4 py-2 border cursor-pointer w-[400px]"
-                  onClick={() => handleSort("description")}
-                >
-                  Mô Tả
-                </th>
+                <th className="px-4 py-2 border">Số Lượng</th>
+                <th className="px-4 py-2 border">Giá</th>
+                <th className="px-4 py-2 border w-[400px]">Mô Tả</th>
                 <th className="px-4 py-2 border">Hành Động</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedProducts.length > 0 ? (
-                paginatedProducts.map((product, index) => (
-                  <tr
-                    key={product.id}
-                    className="text-center odd:bg-white even:bg-gray-50 hover:bg-gray-100 transition-all"
-                  >
-                    <td className="px-4 py-2 border">{startIdx + index + 1}</td>
-                    <td className="px-4 py-2 border">{product.name}</td>
-                    <td className="px-4 py-2 border">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover"
-                      />
-                    </td>
-                    <td className="px-4 py-2 border">{product.stock}</td>
-                    <td className="px-4 py-2 border">
-                      {(typeof product.price === "string"
-                        ? parseFloat(product.price)
-                        : product.price
-                      ).toLocaleString("it-IT", {
-                        style: "currency",
-                        currency: "VND",
-                      })}
-                    </td>
-                    <td className="px-4 py-2 border">{product.description}</td>
-                    <td className="px-4 py-2 border">
-                      <FontAwesomeIcon
-                        icon={faWrench}
-                        className="cursor-pointer mr-2 text-blue-500"
-                        title="Sửa"
-                        onClick={() => handleOpenModal(product)}
-                      />
-                      <FontAwesomeIcon
-                        icon={faTrash}
-                        className="cursor-pointer text-red-500"
-                        title="Xoá"
-                        onClick={() => handleDelete(product.id)}
-                      />
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={7} className="text-center py-4">
-                    Không tìm thấy sản phẩm nào.
+              {paginatedProducts.map((product, index) => (
+                <tr key={product.id} className="hover:bg-gray-50">
+                  <td className="px-4 py-2 border">{index + startIdx + 1}</td>
+                  <td className="px-4 py-2 border">{product.name}</td>
+                  <td className="px-4 py-2 border">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-24 h-24 object-cover"
+                    />
+                  </td>
+                  <td className="px-4 py-2 border">{product.stock}</td>
+                  <td className="px-4 py-2 border">{product.price}</td>
+                  <td className="px-4 py-2 border">{product.description}</td>
+                  <td className="px-4 py-2 border">
+                    <button
+                      onClick={() => handleOpenModal(product)}
+                      className="cursor-pointer mr-2 text-blue-500"
+                    >
+                      <FontAwesomeIcon icon={faWrench} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="text-red-500"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination Controls */}
         <div className="flex justify-center items-center space-x-4 mt-4">
           <button
             onClick={handlePreviousPage}
+            className="px-4 py-2 bg-gray-300 rounded-md"
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-300 rounded-md disabled:bg-gray-200"
           >
-            <FontAwesomeIcon icon={faArrowLeft} /> Trước
+            <FontAwesomeIcon icon={faArrowLeft} /> Trang Trước
           </button>
           <span>
             Trang {currentPage} / {totalPages}
           </span>
           <button
             onClick={handleNextPage}
+            className="px-4 py-2 bg-gray-300 rounded-md"
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-300 rounded-md disabled:bg-gray-200"
           >
-            Sau <FontAwesomeIcon icon={faArrowRight} />
+            Trang Sau <FontAwesomeIcon icon={faArrowRight} />
           </button>
         </div>
-      </div>
 
-      {/* Modal */}
-      {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">
-              {currentProduct ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">
-                  Tên Sản Phẩm
-                </label>
+        {modalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-md w-96">
+              <h2 className="text-lg font-semibold mb-4">
+                {currentProduct ? "Cập Nhật Sản Phẩm" : "Thêm Sản Phẩm"}
+              </h2>
+              <form onSubmit={handleFormSubmit}>
+                <label className="block mb-2">Tên Sản Phẩm:</label>
                 <input
+                  type="text"
                   name="name"
                   defaultValue={currentProduct?.name || ""}
+                  required
                   className="border border-gray-300 p-2 rounded-md w-full"
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Ảnh</label>
+
+                <label className="block mb-2 mt-4">Ảnh:</label>
                 <input
-                  name="image"
-                  defaultValue={currentProduct?.image || ""}
+                  type="file"
+                  onChange={handleImageChange}
                   className="border border-gray-300 p-2 rounded-md w-full"
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Số Lượng</label>
+
+                <label className="block mb-2 mt-4">Số Lượng:</label>
                 <input
-                  name="stock"
                   type="number"
+                  name="stock"
                   defaultValue={currentProduct?.stock || 0}
+                  required
                   className="border border-gray-300 p-2 rounded-md w-full"
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Giá</label>
+
+                <label className="block mb-2 mt-4">Giá:</label>
                 <input
+                  type="text"
                   name="price"
                   defaultValue={currentProduct?.price || ""}
+                  required
                   className="border border-gray-300 p-2 rounded-md w-full"
                 />
-              </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Mô Tả</label>
+
+                <label className="block mb-2 mt-4">Mô Tả:</label>
                 <textarea
                   name="description"
                   defaultValue={currentProduct?.description || ""}
+                  required
                   className="border border-gray-300 p-2 rounded-md w-full"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="px-4 py-2 bg-gray-300 rounded-md"
-                >
-                  Huỷ
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md"
-                >
-                  {currentProduct ? "Cập Nhật" : "Thêm"}
-                </button>
-              </div>
-            </form>
+                ></textarea>
+
+                <div className="mt-4 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                  >
+                    {currentProduct ? "Cập Nhật" : "Thêm"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
